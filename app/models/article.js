@@ -26,3 +26,4 @@ var Comment = new Schema({
 });
 
 module.exports = mongoose.model('Article', articleSchema);
+

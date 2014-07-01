@@ -2,6 +2,8 @@ var express = require('express');
 var User = require('../models/user');
 var Classroom = require('../models/classroom');
 var Article = require('../models/article');
+var mongoose = require('mongoose');
+
 module.exports = (function() {
 	'use strict';
 	var api = express.Router();
@@ -136,7 +138,7 @@ module.exports = (function() {
 		article.save(function(err) {
 			if (err)
 				res.send(err);
-			res.json({message: 'Article created!'});
+			
 		});
 		Classroom.findById(req.params.classroomID, function(err, classroom) {
 			if (err)
@@ -145,33 +147,40 @@ module.exports = (function() {
 			classroom.save(function(err) {
 				if (err)
 					res.send(err);
+				res.json({message: 'Article created!'});
 			});
 
 		});
 	});
-	//Get All articles
-	api.get('/articles', function(req, res) {
-		Article.find(function(err, articles) {
+
+	api.get('/classrooms/:classroomID/articles', function(req, res) {
+		Classroom.findById(req.params.classroomID, function(err, classroom) {
 			if (err)
 				res.send(err);
-			res.send(articles);
+			var articles = classroom.articles;
+			var i;
+			for(i=0; i<articles.length; i++) {
+				Article.findById(articles[i], function(err, article) {
+					if (err)
+						res.send(err);
+					res.send(article);
+				})
+			}
+			
 		});
 	});
 
-	//Find articles of classroom: classroomID
-	api.get('/classrooms/:classroomID/articles', function(req, res) {
-		Article.find({classroomID : req.params.classroomID}, function(err, articles) {
-			if (err)
-				res.send(err);
-			res.send(articles);
-		});
-	});
-	//find an article by classroomID and articleID
 	api.get('/classrooms/:classroomID/articles/:articleID', function(req, res) {
-		Article.find({classroomID : req.params.classroomID, _id : req.params.articleID}, function(err, article) {
+		Classroom.findById(req.params.classroomID, function(err, classroom) {
 			if (err)
 				res.send(err);
-			res.send(article);
+			var articles = classroom.articles;
+			Article.findById(req.params.articleID, function(err, article) {
+				if (err)
+					res.send(err);
+				res.send(article);
+			})
+			
 		});
 	});
 
@@ -218,7 +227,9 @@ module.exports = (function() {
 		Article.findById(req.params.articleID, function(err, article) {
 			if (err)
 				res.send(err);
-			article.discussions.push({"articleIndex" : {"startIDX" : req.body.startIDX, "endIDX" : req.body.endIDX}, "userID" : req.body.userID, "content" : req.body.content});
+			article.discussions.push({content:"weeeee"});
+			
+			
 			article.save(function(err) {
 				if (err)
 					res.send(err);
@@ -244,7 +255,7 @@ module.exports = (function() {
 			res.send(d);
 		});
 	});
-
+/*
 	api.put('/classrooms/:classroomID/articles/:articleID/discussions/:discussionID', function(req, res) {
 		db.Article.discussions.save(
    {
@@ -256,6 +267,18 @@ module.exports = (function() {
 )
 	})
 
-
+*/
+	api.delete('/classrooms/:classroomID/articles/:articleID/discussions/:discussionID', function(req, res) {
+		Article.findById(req.params.articleID, function(err, article) {
+			if (err)
+				res.send(err);
+			article.discussions[req.params.discussionID].remove();
+			article.save(function(err) {
+				if (err)
+					res.send(err);
+				res.json({message: "discussion deleted!"})
+			})
+		})
+	})
 	return api;
 })();

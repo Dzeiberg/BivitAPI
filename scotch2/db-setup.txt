@@ -1,0 +1,36 @@
+Classroom
+	classroomID: _id (unique)
+	ClassroomName: string
+	articles : articleID[]
+
+User
+	userID : _id (unique)
+	//username: String might be generated through authentication service
+	name : String
+	teacher : boolean
+	bio : String
+	//password add with authentication service
+	classroomIDs : int[]  //classrooms user is allowed into
+	//discussions : discussionID[]
+	//comments : []
+
+
+Article
+	articleID : _id
+	classroomID : _id
+	title : String
+	author : String
+	source : String
+	content : String
+	Discussion : {
+		discussionID : _id
+		userID : _id
+		articleIndex : int[]
+		content : String
+		Comments : {
+			commentID : _id
+			userID : _id
+			content : string
+		}
+	}
+
