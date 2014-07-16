@@ -8,7 +8,7 @@ var express    = require('express'); 		// call express
 var app        = express(); 				// define our app using express
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://test:test@novus.modulusmongo.net:27017/a3pemoGa')
+mongoose.connect('mongodb://localhost/Scotch2')
 var classroom = require('./app/models/classroom');
 var article = require('./app/models/article');
 var user = require('./app/models/user');
