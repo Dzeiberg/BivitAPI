@@ -1,8 +1,33 @@
+<!doctype html>
+<html>
+<head>
+	<title>Node Authentication</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		body 		{ padding-top:80px; word-wrap:break-word; }
+	</style>
+</head>
+
+<body>
+<nav class="navbar navbar-default" role="navigation">
+   <div class="navbar-header">
+      <a class="navbar-brand" href="#">Bivit</a>
+   </div>
+   <div>
+      <ul class="nav navbar-nav">
+         <li class="active"><a href="/">Home</a></li>
+         <li><a href="/Users">Users</a></li>
+         <li><a href='/logout'>Logout</a></li>
+      </ul>
+   </div>
+</nav>
+<l>
 <% for (var i=0; i<Users.length; i++) { %>
-<p>
-						
-						
-						<a href="/users/<%=Users[i]._id%>" class="active"><%= Users[i].local.name %></a>
-						
-</p>
+
+<li><a href="/users/<%=Users[i]._id%>" class="active"><%= Users[i].local.name %></a></li>						
+
 <% } %>
+</l>
+</body>
+</html>

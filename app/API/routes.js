@@ -11,8 +11,35 @@ module.exports = function(app, passport) {
 //=========================USER==================================================================
 	// HOME PAGE (with login links) ========
 	app.get('/', function(req, res) {
-		res.render('index.ejs'); // load the index.ejs file
+		if (req.user)
+			res.render('profile.ejs', {
+				user : req.user
+			
+			}); 
+
+		else
+			res.render('index.ejs');
+
 	});
+//VICKEV----------------------------------------------
+//test login
+app.get('/loggedin', function(req, res) {
+ res.send(req.isAuthenticated() ? req.user : '0');
+});
+
+// route to log in
+app.post('/login2', passport.authenticate('local'), function(req, res) {
+ res.send(req.user);
+});
+
+// route to log out
+app.post('/logout2', function(req, res){
+  req.logOut();
+  res.send(200);
+});
+
+
+//END VICKEV -----------------------------------------
 
 	// LOGIN ===============================
 	// show the login form
@@ -77,7 +104,7 @@ module.exports = function(app, passport) {
 	});
 
 	//GET ALL USERS================
-	app.get('/users', isLoggedIn, function(req, res) {
+	app.get('/users', auth, function(req, res) {
 		User.find(function(err, users) {
 			if (err)
 				res.send(err);
@@ -93,7 +120,9 @@ module.exports = function(app, passport) {
 		User.findById(req.params.userID, function(err, user) {
 			if (err)
 				res.send(err);
-			res.send(user);
+			res.render('user.ejs', {
+				User : user
+			})
 		});
 	});
 
@@ -399,4 +428,12 @@ function currentUser(req, res, next) {
 	console.log('Invalid credentials')
 	res.redirect('/profile');
 }
+
+var auth = function(req, res, next){
+	if (!req.isAuthenticated())
+		res.send(401);
+	else
+		next();
+};
+
 
