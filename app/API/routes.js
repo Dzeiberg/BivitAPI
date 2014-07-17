@@ -81,7 +81,10 @@ module.exports = function(app, passport) {
 		User.find(function(err, users) {
 			if (err)
 				res.send(err);
-			res.send(users);
+			res.render('users.ejs', {
+				Users : users
+			})
+			
 		});
 	});
 
